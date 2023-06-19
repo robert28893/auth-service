@@ -1,11 +1,11 @@
 package vn.unigap.java.api.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import vn.unigap.java.api.dto.in.RegisterDtoIn;
 import vn.unigap.java.api.service.AccountService;
 
 import java.util.HashMap;
@@ -20,6 +20,11 @@ public class AccountController {
 	@Autowired
 	public AccountController(AccountService accountService) {
 		this.accountService = accountService;
+	}
+
+	@PostMapping(value = "/register")
+	public ResponseEntity<?> register(@RequestBody @Valid RegisterDtoIn registerDtoIn) {
+		return null;
 	}
 
 	@GetMapping(value = "/test")
