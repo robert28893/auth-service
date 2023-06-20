@@ -1,5 +1,6 @@
 package vn.unigap.java.authentication;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -16,6 +17,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -49,6 +51,7 @@ import java.security.interfaces.RSAPublicKey;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
 	@Bean
@@ -86,18 +89,18 @@ public class SecurityConfig {
 
 	@Bean
 	@Order(2)
-	public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)
+	public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http, ObjectMapper objectMapper)
 			throws Exception {
 		http
 				.headers(header -> header.frameOptions(frame -> frame.disable()))
 				.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests((authorize) -> authorize
-						.requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
 						.requestMatchers(
-								new AntPathRequestMatcher("/account/login"),
+								new AntPathRequestMatcher("/h2-console/**"),
+//								new AntPathRequestMatcher("/account/login"),
+//								new AntPathRequestMatcher("/account/refresh-token"),
 								new AntPathRequestMatcher("/")
 						).permitAll()
-						.requestMatchers(new AntPathRequestMatcher("/account/refresh-token")).permitAll()
 						.anyRequest().authenticated()
 				)
 				// Form login handles the redirect to the login page from the
@@ -105,6 +108,8 @@ public class SecurityConfig {
 //                .formLogin(Customizer.withDefaults())
 				.oauth2ResourceServer(resourceServer ->
 								resourceServer
+										.accessDeniedHandler(new CustomAccessDeniedHandler(objectMapper))
+										.authenticationEntryPoint(new CustomAuthenticationEntryPoint(objectMapper))
 //										.jwt(jwtConfigurer -> jwtConfigurer.jwkSetUri("http://localhost:8051/oauth2/jwks"))
 										.jwt(Customizer.withDefaults())
 				);
