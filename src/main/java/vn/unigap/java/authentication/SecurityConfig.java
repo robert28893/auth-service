@@ -231,12 +231,12 @@ public class SecurityConfig {
 		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
 
-	@Bean
-	public OAuth2RefreshTokenAuthenticationProvider oAuth2RefreshTokenAuthenticationProvider(
-			OAuth2AuthorizationService oAuth2AuthorizationService,
-			OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator) {
-		return new OAuth2RefreshTokenAuthenticationProvider(oAuth2AuthorizationService, tokenGenerator);
-	}
+//	@Bean
+//	public OAuth2RefreshTokenAuthenticationProvider oAuth2RefreshTokenAuthenticationProvider(
+//			OAuth2AuthorizationService oAuth2AuthorizationService,
+//			OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator) {
+//		return new OAuth2RefreshTokenAuthenticationProvider(oAuth2AuthorizationService, tokenGenerator);
+//	}
 
 	private static RSAPrivateKey readPrivateKey(File file) throws Exception {
 		try (FileReader keyReader = new FileReader(file)) {
