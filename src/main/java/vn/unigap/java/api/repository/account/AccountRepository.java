@@ -1,0 +1,12 @@
+package vn.unigap.java.api.repository.account;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import vn.unigap.java.api.entity.Account;
+
+import java.util.Optional;
+
+@Repository
+public interface AccountRepository extends JpaRepository<Account, String> {
+	Optional<Account> findByUsername(String username);
+}

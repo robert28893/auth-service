@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import vn.unigap.java.api.dto.in.ConfirmRegisterDtoIn;
 import vn.unigap.java.api.dto.in.RegisterDtoIn;
 import vn.unigap.java.api.service.AccountService;
 
@@ -22,8 +23,21 @@ public class AccountController {
 		this.accountService = accountService;
 	}
 
+	/*
+		1. Tao tai khoan Account voi enabled = 0, gan tai khoan cho role
+		2. Tao 1 token gan voi tai khoan
+	 */
 	@PostMapping(value = "/register")
 	public ResponseEntity<?> register(@RequestBody @Valid RegisterDtoIn registerDtoIn) {
+		return null;
+	}
+
+	/*
+		1. Kiem tra xem token co hop le khong
+		2. Kich hoat tai khoan gan voi token
+	 */
+	@PostMapping(value = "/confirm-register")
+	public ResponseEntity<?> register(@RequestBody @Valid ConfirmRegisterDtoIn confirmRegisterDtoIn) {
 		return null;
 	}
 

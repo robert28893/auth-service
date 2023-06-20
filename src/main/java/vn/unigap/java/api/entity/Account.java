@@ -20,12 +20,15 @@ import java.util.Date;
 @Table(name = "ACCOUNT")
 public class Account {
 	@Id
-	@Column(name = "UUID_ACCOUNT")
+	@Column(name = "ID")
 	@Builder.Default
-	private String uuidAccount = Common.uuid();
+	private String id = Common.uuid();
 
 	@Column(name = "USERNAME", unique = true)
 	private String username;
+
+	@Column(name = "PASSWORD")
+	private String password;
 
 	@Column(name = "EMAIL")
 	private String email;
@@ -34,13 +37,27 @@ public class Account {
 	private String fullName;
 
 	@Builder.Default
-	@Column(name = "ACTIVATED")
-	private Integer activated = 0; // 0: chua kich hoat, 1: kich hoat
+	@Column(name = "ENABLED")
+	private Integer enabled = 0; // 0: chua kich hoat, 1: kich hoat
 
+	@Builder.Default
+	@Column(name = "EXPIRED")
+	private Integer expired = 0; // 0: chua het han, 1: het han
+
+	@Builder.Default
+	@Column(name = "LOCKED")
+	private Integer locked = 0; // 0: Khong khoa, 1: Khoa
+
+	@Builder.Default
+	@Column(name = "CREDENTIALS_EXPIRED")
+	private Integer credentialsExpired = 0; // mat khau het han 0: chua het han, 1: het han
+
+	@Builder.Default
 	@Column(name = "CREATED_DATE")
-	private Date createdDate;
+	private Date createdDate = new Date();
 
+	@Builder.Default
 	@Column(name = "UPDATED_DATE")
-	private Date updatedDate;
+	private Date updatedDate = new Date();
 
 }

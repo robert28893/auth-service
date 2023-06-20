@@ -1,1 +1,10 @@
 select *,  UTF8TOSTRING(ACCESS_TOKEN_VALUE), UTF8TOSTRING(REFRESH_TOKEN_VALUE), UTF8TOSTRING(ATTRIBUTES) from OAUTH2_AUTHORIZATION;
+
+insert into ROLE(id, name)
+values ('9ab5cd22-0f16-11ee-be56-0242ac120002', 'USER');
+
+insert into account( id, created_date, credentials_expired, email, enabled, expired, full_name, locked, password, updated_date, username)
+values('ab3d5c94-0f22-11ee-be56-0242ac120002', current_timestamp, 0, 'phuongha.test@unigap.vn', 1, 0, 'hoang anh phuong', 0, '{bcrypt}$2a$10$MgNvmY16hCpjN8PbOtNBrulL1ayemN7OFawalTW3hlJlReGJNeKzC', current_timestamp, 'phuongha.test@unigap.vn');
+
+insert into account_role(id, account_id, role_id)
+values ('82bd9b84-0f23-11ee-be56-0242ac120002', 'ab3d5c94-0f22-11ee-be56-0242ac120002', '9ab5cd22-0f16-11ee-be56-0242ac120002');
