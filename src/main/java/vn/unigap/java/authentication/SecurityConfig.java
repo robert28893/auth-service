@@ -29,7 +29,6 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
-import org.springframework.security.oauth2.server.authorization.authentication.OAuth2RefreshTokenAuthenticationProvider;
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
@@ -37,6 +36,7 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.token.*;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
@@ -59,26 +59,42 @@ public class SecurityConfig {
 	public SecurityFilterChain authorizationServerSecurityFilterChain(
 			HttpSecurity http,
 			OAuth2AuthorizationService authorizationService,
-			OAuth2TokenGenerator<?> tokenGenerator)
+			OAuth2TokenGenerator<?> tokenGenerator,
+			ObjectMapper objectMapper,
+			UserDetailsService userDetailsService,
+			PasswordEncoder passwordEncoder)
 			throws Exception {
 		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 
+		AuthenticationEntryPointFailureHandler failureHandler = new AuthenticationEntryPointFailureHandler(
+				new CustomAuthenticationEntryPoint(objectMapper));
+		failureHandler.setRethrowAuthenticationServiceException(false);
+
 		http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
+				.clientAuthentication(client -> client.errorResponseHandler(failureHandler))
+				.authorizationEndpoint(authorizationEndpoint -> {
+					authorizationEndpoint.errorResponseHandler(failureHandler);
+				})
 				.tokenEndpoint(tokenEndpoint -> {
 					tokenEndpoint.accessTokenRequestConverter(new OAuth2CustomPasswordAuthenticationConverter());
 					tokenEndpoint.authenticationProvider(new OAuth2CustomPasswordAuthenticationProvider(
-							authorizationService, tokenGenerator));
+							authorizationService, tokenGenerator, userDetailsService, passwordEncoder));
+//					tokenEndpoint.errorResponseHandler(
+//							new AuthenticationEntryPointFailureHandler(
+//									new CustomAuthenticationEntryPoint(objectMapper)));
+					tokenEndpoint.errorResponseHandler(failureHandler);
 				});
 //				.oidc(Customizer.withDefaults());    // Enable OpenID Connect 1.0
 		http
 				// Redirect to the login page when not authenticated from the
 				// authorization endpoint
-				.exceptionHandling((exceptions) -> exceptions
-						.defaultAuthenticationEntryPointFor(
-								new LoginUrlAuthenticationEntryPoint("/login"),
-								new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
-						)
-				)
+				.exceptionHandling(exception -> exception.authenticationEntryPoint(new CustomAuthenticationEntryPoint(objectMapper)))
+//				.exceptionHandling((exceptions) -> exceptions
+//						.defaultAuthenticationEntryPointFor(
+//								new LoginUrlAuthenticationEntryPoint("/login"),
+//								new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
+//						)
+//				)
 				.oauth2ResourceServer((resourceServer) -> resourceServer
 						.jwt(Customizer.withDefaults())
 				)

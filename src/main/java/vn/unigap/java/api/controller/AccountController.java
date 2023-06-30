@@ -2,16 +2,13 @@ package vn.unigap.java.api.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import vn.unigap.java.api.dto.in.ConfirmRegisterDtoIn;
 import vn.unigap.java.api.dto.in.RegisterDtoIn;
 import vn.unigap.java.api.service.AccountService;
 import vn.unigap.java.common.controller.AbstractResponseController;
-import vn.unigap.java.common.exception.ApiException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,6 +57,13 @@ public class AccountController extends AbstractResponseController {
 			Map<String, String> map = new HashMap<>();
 			map.put("x", "y");
 			return map;
+		});
+	}
+
+	@GetMapping(value = "/profile")
+	public ResponseEntity<?> getProfile() {
+		return responseEntity(() -> {
+			return accountService.getProfile();
 		});
 	}
 }
