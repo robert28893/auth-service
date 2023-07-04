@@ -12,4 +12,7 @@ public class RegisterDtoIn {
 
 	@NotEmpty
 	private String fullName;
+
+	@NotEmpty
+	private String password;
 }
