@@ -16,17 +16,19 @@ eureka:
 ---
 spring:
   datasource:
-    url: jdbc:h2:file:./auth
-    driverClassName: org.h2.Driver
-    username: admin
+    url: jdbc:mysql://localhost:3306/auth
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: user
     password: password
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: none
-  h2:
-    console:
-      enabled: true
+    properties:
+      hibernate:
+        auto_quote_keyword: true
+    show-sql: true
+
 logging:
   level:
 #    root: DEBUG

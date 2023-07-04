@@ -12,9 +12,9 @@ import java.util.List;
 public interface RoleRepository extends JpaRepository<Role, String> {
 	@Query(
 			value = "SELECT A.* " +
-					"FROM ROLE A " +
-					"INNER JOIN ACCOUNT_ROLE B ON A.ID = B.ROLE_ID " +
-					"INNER JOIN ACCOUNT C ON B.ACCOUNT_ID = C.ID " +
+					"FROM role A " +
+					"INNER JOIN account_role B ON A.ID = B.ROLE_ID " +
+					"INNER JOIN account C ON B.ACCOUNT_ID = C.ID " +
 					"WHERE C.ID = :ACCOUNT_ID",
 			nativeQuery = true
 	)
