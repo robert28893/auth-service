@@ -110,7 +110,7 @@ public class SecurityConfig {
 				.authorizeHttpRequests((authorize) -> authorize
 						.requestMatchers(
 								new AntPathRequestMatcher("/h2-console/**"),
-//								new AntPathRequestMatcher("/account/login"),
+								new AntPathRequestMatcher("/account/register"),
 //								new AntPathRequestMatcher("/account/refresh-token"),
 								new AntPathRequestMatcher("/")
 						).permitAll()

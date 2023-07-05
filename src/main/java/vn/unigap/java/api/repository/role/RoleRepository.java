@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import vn.unigap.java.api.entity.Role;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, String> {
@@ -19,4 +20,6 @@ public interface RoleRepository extends JpaRepository<Role, String> {
 			nativeQuery = true
 	)
 	List<Role> listRoleByAccountId(@Param(value = "ACCOUNT_ID") String accountId);
+
+	Optional<Role> findByName(String name);
 }

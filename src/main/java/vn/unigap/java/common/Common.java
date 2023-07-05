@@ -11,4 +11,14 @@ public class Common {
 		if (str == null) return null;
 		return str.substring(0, Math.min(len, str.length()));
 	}
+
+	public static String toUpperCase(String s) {
+		if (s == null) return null;
+		return s.toUpperCase();
+	}
+
+	public static String toLowerCase(String s) {
+		if (s == null) return null;
+		return s.toLowerCase();
+	}
 }

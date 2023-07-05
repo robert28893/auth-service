@@ -1,11 +1,13 @@
 package vn.unigap.java.authentication;
 
+import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.*;
@@ -29,6 +31,7 @@ public class OAuth2CustomPasswordAuthenticationProvider implements Authenticatio
     private final OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator;
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private final UserDetailsChecker userDetailsChecker = new AccountStatusUserDetailsChecker();
 
     public OAuth2CustomPasswordAuthenticationProvider(OAuth2AuthorizationService authorizationService,
                                                       OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator,
@@ -59,6 +62,7 @@ public class OAuth2CustomPasswordAuthenticationProvider implements Authenticatio
         }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(customPasswordAuthentication.getUsername());
+        userDetailsChecker.check(userDetails);
         if (!passwordEncoder.matches(customPasswordAuthentication.getPassword(), userDetails.getPassword())) {
             throw new BadCredentialsException("invalid username and password");
         }
